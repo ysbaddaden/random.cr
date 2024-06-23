@@ -1,5 +1,3 @@
-require "random/secure"
-
 # Fixed-increment version of Java 8's SplittableRandom generator
 # (`Random::Splittable`). Passes BigCrush and can be useful when 64 bits of
 # state is needed.

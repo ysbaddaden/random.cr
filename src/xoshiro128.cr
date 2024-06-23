@@ -1,4 +1,5 @@
 require "./splitmix64"
+require "./float"
 
 # Based on the original implementation by David Blackman and Sebastiano Vigna
 # (vigna@acm.org)
@@ -11,10 +12,7 @@ require "./splitmix64"
 
 abstract class Random::XoShiRo128
   include Random
-
-  # The multiplier to convert the least significant 24-bits of an Int32 to a
-  # Float32.
-  private FLOAT_UNIT = 1_f32 / (1 << 24)
+  include Random::SinglePrecisionFloat
 
   private JUMP_COEFFICIENTS = UInt32.static_array(
     0x8764000b_u32,
@@ -80,12 +78,6 @@ abstract class Random::XoShiRo128
 
     @state = s
     result
-  end
-
-  # Returns the next 32-bit float.
-  def next_float : Float32
-    # require the least significant 24-bits so shift the higher bits across
-    (v >> 8) * FLOAT_UNIT
   end
 
   # Simulates 2^64 calls to `next_u`, allowing to generate non-overlapping

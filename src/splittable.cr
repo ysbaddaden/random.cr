@@ -1,7 +1,4 @@
-require "atomic"
-require "random/secure"
-
-# Splittable Random Number Generator
+# Splittable Random Number Generator (64-bit state)
 #
 # Based on the original implementation of SplittableRandom found in the "Fast
 # Splittable Pseudorandom Number Generators" paper by Guy L. Steel, Doug Lea and
@@ -10,12 +7,12 @@ require "random/secure"
 #
 # The original implementation was modified to match the SplittableRandom
 # generator found in Java 8 SDK, as well as Lemire's C port (based on Vigna's).
-# See: https://github.com/lemire/testingRNG/blob/master/source/splitmix64.h
+# See <https://github.com/lemire/testingRNG/blob/master/source/splitmix64.h>
 class Random::Splittable
   include Random
+  include Random::DoublePrecisionFloat
 
   private GOLDEN_GAMMA = 0x9e3779b97f4a7c15_u64 # odd
-  private DOUBLE_UNIT = 1.0 / (1_u64 << 53)
 
   @seed : UInt64
   @gamma : UInt64
@@ -41,15 +38,11 @@ class Random::Splittable
     mix32(next_seed)
   end
 
-  def next_float : Float64
-    (next_u >> 11) * DOUBLE_UNIT
-  end
-
   def split : self
     self.class.new(next_u, mix_gamma(next_seed))
   end
 
-  private def next_seed
+  private def next_seed : UInt64
     @seed &+= @gamma
   end
 
@@ -76,8 +69,8 @@ class Random::Splittable
     @@default_gen ||= Atomic(UInt64).new(initial_seed)
   end
 
-  private def initial_seed
-    bytes = uninitialized UInt8[8]
+  private def initial_seed : UInt64
+    bytes = uninitialized UInt8[sizeof(UInt64)]
     Random::Secure.random_bytes(bytes.to_slice)
     bytes.unsafe_as(UInt64)
   end

@@ -1,9 +1,10 @@
-name: crystal-random
+name: random
 version: 0.1.0
 
 authors:
+  - Julien Portalier <julien@portalier.com>
   - Martin Verzilli <mverzilli@manas.tech>
 
-crystal: 0.23.1
+crystal: 1.0.0
 
 license: MIT

@@ -2,10 +2,7 @@ require "./splitmix64"
 
 abstract class Random::XoShiRo256
   include Random
-
-  # The multiplier to convert the least significant 53-bits of a UInt64 to a
-  # Float64.
-  private DOUBLE_UNIT = 1_f64 / (1_u64 << 53)
+  include Random::DoublePrecisionFloat
 
   private JUMP_COEFFICIENTS = UInt64.static_array(
     0x180ec6d33cfd0aba_u64,
@@ -70,12 +67,6 @@ abstract class Random::XoShiRo256
 
     @state = s
     result
-  end
-
-  # Returns the next 64-bit float.
-  def next_float : Float64
-    # require the least significant 53-bits so shift the higher bits across
-    (next_u >> 11) * DOUBLE_UNIT
   end
 
   # Simulates 2^128 calls to `next_u`; it can be used to generate 2^128
