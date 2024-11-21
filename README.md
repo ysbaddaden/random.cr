@@ -13,7 +13,7 @@ Add the shard:
 ```yaml
 dependencies:
   random:
-    github: ysbaddaden/random
+    github: ysbaddaden/random.cr
 ```
 
 ## Usage
