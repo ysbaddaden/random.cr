@@ -6,7 +6,7 @@ module Random::SinglePrecisionFloat
   # Returns the next 32-bit float.
   def next_float : Float32
     # require the least significant 24-bits so shift the higher bits across
-    (v >> 8) * FLOAT_UNIT
+    (next_u >> 8) * FLOAT_UNIT
   end
 end
 
